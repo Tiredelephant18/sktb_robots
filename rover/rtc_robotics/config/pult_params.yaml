@@ -1,0 +1,5 @@
+configuration:
+  dataType: "26?"
+  delay: 0.05
+  HOST: "192.168.0.102" # setup ip
+  PORT: 65432

@@ -3,14 +3,14 @@ Description=video_sender_from_rpi
 After=network-online.target
 
 [Service]
-Type=oneshot
-WorkingDirectory=/home/RTC-C-2.0-002/rtc_robotics/robot_ws
-ExecStart=/home/RTC-C-2.0-002/venv_rtc_student/bin/python onboard.py
+Type=simple
+WorkingDirectory=/home/student/rtc_robotics/robot_ws
+ExecStart=/home/student/venv_rtc_student/bin/python onboard.py
 
-Restart=on-failure
-RestartSec=1
-User=RTC-C-2.0-002
-Group=RTC-C-2.0-002
+Restart=always
+RestartSec=3
+User=student
+Group=student
 
 [Install]
 WantedBy=multi-user.target
