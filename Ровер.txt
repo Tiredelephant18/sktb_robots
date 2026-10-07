@@ -1,0 +1,182 @@
+НАСТРОЙКА МАЛИНЫ 
+1)ip neighbor show dev enp7s0 -определим адрес малины 
+2) подключаемся по ssh 
+3) устанавливаем 
+
+cd ~
+git clone -b rev_2.0_B https://github.com/ubersmurfx/rtc_robotics.git
+cd rtc_robotics/installation
+sudo sh install_rtc_robotics.sh
+sudo sh mod_boot.sh
+cd ~
+python3 -m venv venv_rtc_rover
+source ~/venv_rtc_rover/bin/activate
+cd rtc_robotics/
+pip install -r requirements.txt
+sudo reboot now
+
+sudo nano ~/.bashrc
+alias activate='source ~/venv_rtc_rover/bin/activate'
+
+source ~/venv_rtc_rover/bin/activate
+sudo nano rtc_robotics/config/robot_params.yaml (выставить параметры)
+i2cdetect -y 1 (проерить наличие servo hat на i2c)
+sudo raspi-config
+поменять имена пользователей в файлах сервисов 
+поменять тип сервисов 
+
+ Type=simple
+ Restart=always
+RestartSec=3
+
+
+запустить сервисы
+sudo sh services_setup.sh 
+sudo systemctl daemon-reload
+sudo systemctl enable rpi_streamer.service
+sudo systemctl enable robot_controller.service
+sudo systemctl status rpi_streamer.service
+sudo systemctl status robot_controller.service
+
+поменять имена пользователей 
+robot_ws/onboard.py, строка 8
+robot_ws/handler.py, 
+robot_ws/disp/display.py, 
+robot_ws/disp/display.py, 
+video_utility/rpi_sender.py, 
+в начале работы переходим в виртуальное окуржение через activate 
+
+
+
+4)настройка wifi адапатера 
+
+sudo apt update
+sudo apt update && sudo apt install -y linux-headers-$(uname -r) build-essential bc dkms git
+
+mkdir -p ~/src
+cd ~/src
+git clone https://github.com/morrownr/8821au-20210708.git
+cd ~/src/8821au-20210708
+cd 8821au-20210708
+sudo ./install-driver.sh
+
+sudo reboot
+
+iwconfig
+для отключения втсроеного wifi модуля необходимо 
+sudo nano /boot/firmware/config.txt
+найти блок all чтобы не зависеть от версии малины и добавить 
+dtoverlay=disable-wifi
+
+
+
+НАСТРОЙКА РОУТЕРА 
+поменять имя сети 
+настроить пароль 
+назначить статический номер малине
+переназначить адрес роутера
+
+
+ПОДКЛЮЧЕНИЕ МАЛИНЫ К РОУТЕРУ 
+sudo nmcli device wifi connect "RTC-C-2.1-002" password "rtc12345"
+ip a show dev wlan0
+nmcli device status 
+nmcli device wifi list
+если малина не видит сетки попытаться поменять в настройках страну подключения 
+
+НАСТРОЙКА ПУЛЬТА
+проверить его адрес чтобы изменить если что конфиги малины 
+
+git clone -b rev_2.0_B https://github.com/ubersmurfx/rtc_robotics.git
+cd rtc_robotics
+
+bash installation/pult_install.sh
+bash installation/install_rtc_robotics.sh
+
+cd ~
+python3 -m venv venv_rtc_rover
+source ~/venv_rtc_rover/bin/activate
+
+cd rtc_robotics
+pip install -r requirements.txt
+
+echo 'source ~/venv_rtc_rover/bin/activate' >> ~/.bashrc
+
+запуск на пульте 
+source ~/venv_rtc_rover/bin/activate
+cd ~/rtc_robotics/video_utility
+python3 rpi_reciever.py
+
+
+source ~/venv_rtc_rover/bin/activate
+cd ~/rtc_robotics/pult_ws
+python3 onpult.py
+ ◦ Настройка серв 
+Нужно зайти в файл event там нужно изменить флаг false на true, там же меняем крайние положения 
+Запускаем onboard onpult потом используя клавиши движения серв получаем значения для нулевых значений и записываем их в начальные 
+ ◦ Подключение серв, сначала Серва камеры, потом все остальные по порядку что пронумерованы ( как подключил Никита в обратном)
+ 
+параметры в конфиг файлах
+ robot_params.yaml для робота 
+ HOST: "192.168.0.6" - адрес  робота, то есть  малины 
+
+  STREAM_TARGET: "192.168.0.5"  -  пульт для отправки туда видеопотока? 
+
+pult_params.yaml пульта 
+ HOST: "192.168.0.36" -  адрес робота
+ИЗМЕНЕНИЕ ИМЕНИ ПОЛЬЗОВАТЕЛЯ 
+1) nano rtc_robotics/service/robot_controller.service
+nano rtc_robotics/service/rpi_streamer.service проверить что там имя user 
+cd rtc_robotics/service
+sudo bash services_setup.sh
+sudo systemctl daemon-reload 
+sudo systemctl restart robot_controller.service
+sudo systemctl restart rpi_streamer.service
+sudo systemctl status robot_controller.service rpi_streamer.service
+
+
+2) на роботе 
+
+robot_ws/onboard.py, строка 8
+robot_ws/handler.py, строка 19
+robot_ws/disp/display.py, строка 27
+robot_ws/disp/display.py, строка 44
+video_utility/rpi_sender.py, строка 8
+
+3) на пульте 
+6. pult_ws/onpult.py, строка 11 (путь с лишней папкой STUDENT/)
+7. video_utility/rpi_reciever.py, строка 6
+запуск на пульте 
+на пульте 
+	cd ~
+	source ~/venv_rtc_rover/bin/activate
+	cd rtc_robotics/video_utility
+	python3 rpi_reciever.py
+
+	cd ~
+	source ~/venv_rtc_rover/bin/activate
+	cd rtc_robotics/pult_ws
+	python3 onpult.py
+	
+ДОПОЛНИТЕЛЬНЫЕ НАСТРОЙКИ ДЛЯ КОМФОРТНОЙ РАБОТЫ 	
+1)подключение к гиту с токеном в ссылке	
+git remote set-url origin https://Tiredelephant18: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@github.com/Tiredelephant18/sktb_robots.git
+2)подключение к вайфаю через BSSID
+sudo nmcli connection modify ec6a3148-054d-498d-ab6a-f6f9cb2e8d76 connection.autoconnect yes
+3) монтирование файловой системы для простоты работы с файлами 
+sshfs student@192.168.0.102:/home/student/rtc_robotics /home/liza/Desktop/SKTB/student_rasp
+
+ip neighbor show dev enp7s0 
+10.42.0.152
+sshfs student@10.42.0.152:/home/student/rtc_robotics /home/liza/Desktop/SKTB/student_rasp
+
+ПРОБЛЕМЫ С КОТОРЫМИ СТОЛКНУЛАСЬ 
+1)при подключении камеры нужно убедиться, что 
+sudo nano /boot/firmware/config.txt
+там должно быть camera_auto_detect=1
+для проверки камеры использовать rpicam-hello --list-cameras
+2) проблема с доступом к приёма с клавиатуры 
+
+ПОДЛКЮЧЕНИЕ К МАЛИНЕ ПИНЫ 
+есть распиновка на схеме(подключения драйверов к малине) и есть распиновка малины на gpio пины (они просто переходят на сервохэд) 
+
