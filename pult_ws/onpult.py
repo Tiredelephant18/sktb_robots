@@ -8,9 +8,8 @@ import keypad_setup
 
 
 # Open the YAML file in the parent directory
-with open('/home/USERNAME/rtc_robotics/config/pult_params.yaml', 'r') as file:
+with open('/home/liza/Desktop/SKTB/rover/rtc_robotics/config/robot_params.yaml', 'r') as file:
     config = yaml.safe_load(file)
-
 
 try:
     import numpy as np
@@ -29,7 +28,6 @@ try:
 except Exception as e:
     print(sys.exc_info(), "\t", e)
 
-
 def send_to_robot(package):
     package = np.clip(package, 0, 1).astype(np.uint8)
     payload = struct.pack(config['configuration']['dataType'],
@@ -37,8 +35,7 @@ def send_to_robot(package):
             package[5], package[6], package[7], package[8], package[9],
             package[10],package[11],package[12],package[13],package[14],
             package[15],package[16],package[17],package[18],package[19],
-            package[20],package[21],package[22],package[23],package[24],
-            package[25])
+            package[20],package[21],package[22],package[23])
     s.send(payload)
 def set_value(pos, value, payload):
     payload[pos] = value
@@ -48,9 +45,8 @@ class Control(threading.Thread):
                0, 0, 0, 0, 0,
                0, 0, 0, 0, 0,
                0, 0, 0, 0, 0,
-               0, 0, 0, 0, 0,
-               0]
-    ''' 25: первый бит отвечает за направление отправки данных, последний отвечает за побитовую сумму '''
+               0, 0, 0, 0]
+    ''' 23: первый бит отвечает за направление отправки данных, последний отвечает за побитовую сумму '''
 
     parityBit = 0
     # parityBit (бит честности) отвечает за целостность данных
@@ -104,8 +100,8 @@ class Sender(Control):
         while _exit != 0:
             try:
 
-                Control.parityBit = (np.sum(Control.payload) - Control.payload[25]) % 2
-                Control.payload[25] = Control.parityBit
+                Control.parityBit = (np.sum(Control.payload) - Control.payload[23]) % 2
+                Control.payload[23] = Control.parityBit
 
                 print(Control.payload)
                 send_to_robot(Control.payload)
