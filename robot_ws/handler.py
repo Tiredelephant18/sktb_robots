@@ -16,7 +16,7 @@ from datetime import datetime
 
 
 # Open the YAML file in the parent directory
-with open('/home/RTC-C-2.0-005/rtc_robotics/config/robot_params.yaml', 'r') as file:
+with open('/home/student/rtc_robotics/config/robot_params.yaml', 'r') as file:
     config = yaml.safe_load(file)
 
 class ClientThread(threading.Thread):

@@ -1,5 +1,7 @@
 configuration:
   dataType: "24?"
   delay: 0.05
+
   HOST: "10.42.0.152" # setup ip
+
   PORT: 65432
