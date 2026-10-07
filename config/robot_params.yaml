@@ -3,9 +3,11 @@ configuration:
     pulsebeat: 0.04
     time_delay_seconds: 0.05
     time_calibrate: 0.1
+
   HOST: "10.42.0.152"
   PORT: 65432
   STREAM_TARGET: "10.42.0.1"
+
   STREAM_PORT: 8554
   state:
     1: "OK"

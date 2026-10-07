@@ -1,12 +1,13 @@
 import subprocess 
 import datetime 
 import yaml
+from pathlib import Path
 
+from pathlib import Path
 
-with open('/home/ubersmurf/rtc_robotics/config/robot_params.yaml', 'r') as file:
+REPO_ROOT = Path(__file__).resolve().parent.parent
+with open(REPO_ROOT / "config" / "robot_params.yaml", "r") as file:
     config = yaml.safe_load(file)
-
-
 date = "date" 
 date_output = subprocess.check_output(date) 
  
