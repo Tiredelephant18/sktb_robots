@@ -5,12 +5,20 @@ from time import sleep
 import socket
 import yaml
 import keypad_setup
+from pathlib import Path
 
+def find_repo_root():
 
-# Open the YAML file in the parent directory
-with open('/home/ubersmurf/STUDENT/rtc_robotics/config/pult_params.yaml', 'r') as file:
+    for parent in Path(__file__).resolve().parents:
+        if (parent / "config").is_dir():
+            return parent
+    raise FileNotFoundError("Не найдена папка config/ выше " + str(Path(__file__).resolve()))
+ 
+ 
+REPO_ROOT = find_repo_root()
+ 
+with open(REPO_ROOT / "config" / "pult_params.yaml", "r") as file:
     config = yaml.safe_load(file)
-
 try:
     import numpy as np
 except ImportError:
