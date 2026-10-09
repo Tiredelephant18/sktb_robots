@@ -24,7 +24,7 @@ class Display():
 		self.image = Image.new("1", (self.oled.width, self.oled.height))
 		self.draw = ImageDraw.Draw(self.image)
 		self._exit = False
-		self.font = ImageFont.truetype('/home/student/rtc_robotics/robot_ws/disp/PixelOperator.ttf', 16)
+		self.font = ImageFont.truetype('/home/student/sktb_robots/robot_ws/disp/PixelOperator.ttf', 16)
 
 	def show_params(self, names ,params):
 		self.image = Image.new("1", (self.oled.width, self.oled.height))
@@ -41,7 +41,7 @@ class Display():
 
 	def show_image(self):
 		self.draw.rectangle((0, 0, self.oled.width, self.oled.height), outline=0, fill=0)
-		self.image = Image.open("/home/student/rtc_robotics/robot_ws/disp/rtc_logo.png").convert('1')
+		self.image = Image.open("/home/student/sktb_robots/robot_ws/disp/rtc_logo.png").convert('1')
 		
 		self.oled.image(self.image)
 		self.oled.show()
