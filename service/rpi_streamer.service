@@ -3,8 +3,8 @@ Description=video_sender_from_rpi
 After=network-online.target
 
 [Service]
-Type=oneshot
-WorkingDirectory=/home/student/rtc_robotics/video_utility
+Type=simple
+WorkingDirectory=/home/student/sktb_robots/video_utility
 ExecStart=/home/student/venv_rtc_student/bin/python rpi_sender.py
 
 Restart=always
