@@ -4,7 +4,7 @@ After=network-online.target
 
 [Service]
 Type=simple
-WorkingDirectory=/home/student/rtc_robotics/robot_ws
+WorkingDirectory=/home/student/sktb_robots/robot_ws
 ExecStart=/home/student/venv_rtc_student/bin/python onboard.py
 
 Restart=always
